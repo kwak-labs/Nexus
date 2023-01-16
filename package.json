@@ -1,0 +1,25 @@
+{
+  "name": "nexus",
+  "description": "Nexus is the discord tipping bot of the Cosmos, used in chains like Sifchain, and Gravity Bridge.\r Completely on chain unlike other tipping discord bots.",
+  "version": "0.5.0",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "tsc && node lib/index.js"
+  },
+  "dependencies": {
+    "@cosmjs/stargate": "^0.29.0",
+    "coingecko-api": "^1.0.10",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2",
+    "mongoose": "^6.6.1"
+  },
+  "devDependencies": {
+    "@types/coingecko-api": "^1.0.10",
+    "@types/node": "^18.7.18"
+  },
+  "author": "",
+  "license": "ISC"
+}
