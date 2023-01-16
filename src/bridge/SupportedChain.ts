@@ -21,7 +21,7 @@ export const ChainData = {
     denom: 'ucre',
     coinName: 'CRE',
     gasParam: {
-      gas: '80000',
+      gas: '180000',
       amount: 1800,
     },
   },
@@ -34,7 +34,7 @@ export const ChainData = {
     denom: 'ugraviton',
     coinName: 'Gravitation',
     gasParam: {
-      gas: '80000',
+      gas: '180000',
       amount: 2500,
     },
   },
@@ -47,20 +47,20 @@ export const ChainData = {
     denom: 'ujuno',
     coinName: 'Juno',
     gasParam: {
-      gas: '80000',
+      gas: '180000',
       amount: 350,
     },
   },
   Kava: {
-    RpcEndpoint: 'https://rpc.data.kava.io',
-    LcdEndpoint: 'https://api.data.kava.io/',
+    RpcEndpoint: 'https://rpc-kava-ia.cosmosia.notional.ventures/',
+    LcdEndpoint: 'https://api-kava-ia.cosmosia.notional.ventures/',
     decimalPrecision: 1000000,
     coingeckoId: 'kava',
     bench32prefix: 'kava',
     denom: 'ukava',
     coinName: 'Kava',
     gasParam: {
-      gas: '80000',
+      gas: '180000',
       amount: 8500,
     },
   },

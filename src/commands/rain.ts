@@ -32,7 +32,6 @@ module.exports = {
     ),
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     try {
-      await interaction.deferReply();
       const coin: string = interaction.options.getString('coin')!;
       const amount: number = interaction.options.getNumber('amount')!;
       const users: number = interaction.options.getInteger('users', true);
@@ -50,7 +49,7 @@ module.exports = {
           .setDescription('You cant make it rain without an account')
           .setColor(EmbedData.ErrorColor)
           .setFooter({ text: EmbedData.Footer });
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [embed],
         });
       }
@@ -71,7 +70,7 @@ module.exports = {
           .setDescription('Your trying to rain more than you have!')
           .setColor(EmbedData.ErrorColor)
           .setFooter({ text: EmbedData.Footer });
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [FailedRain],
           ephemeral: true,
         });
@@ -92,7 +91,7 @@ module.exports = {
           )
           .setColor(EmbedData.ErrorColor)
           .setFooter({ text: EmbedData.Footer });
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [FailedRain],
           ephemeral: true,
         });
@@ -130,7 +129,7 @@ module.exports = {
         });
       }
 
-      const ProccessingTipEmbed = new EmbedBuilder()
+      const ProccessingRainEmbed = new EmbedBuilder()
         .setAuthor({
           name: `Raining ${coinname}`,
           iconURL: interaction.user.displayAvatarURL(),
@@ -140,9 +139,8 @@ module.exports = {
         )
         .setColor(EmbedData.SuccessColor)
         .setFooter({ text: EmbedData.Footer });
-      await interaction.followUp({
-        embeds: [ProccessingTipEmbed],
-        ephemeral: true,
+      await interaction.reply({
+        embeds: [ProccessingRainEmbed],
       });
 
       let rainTx = bridge.rain(messages, amount.toString(), memo).then(async (response) => {
@@ -169,7 +167,7 @@ module.exports = {
           .setDescription(
             `${interaction.user} has just rained **${amount} ${coinname}** (*$${(
               await bridge.getUsdByAsset(amount)
-            ).toFixed(3)}*) on ${users} users)
+            ).toFixed(3)}*) on ${users} users
             
             Each user will recieve **${amountPerUser} ${coinname}** (*$${(
               await bridge.getUsdByAsset(parseInt(amountPerUser))
@@ -180,7 +178,7 @@ module.exports = {
           .setFooter({
             text: `TX Hash: ${response}`,
           });
-        return await interaction.followUp({
+        return await interaction.editReply({
           embeds: [SuccessSend],
           content: WinningContent,
         });

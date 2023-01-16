@@ -29,7 +29,6 @@ module.exports = {
 
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     try {
-      await interaction.deferReply();
       let coin: string = interaction.options.getString('coin')!;
       let memo = interaction.options.getString('memo')!;
       let amount = interaction.options.getNumber('amount')!;
@@ -46,7 +45,7 @@ module.exports = {
           })
           .setDescription('You dont have an account with Nexus /start') // eric easter egg
           .setColor(EmbedData.ErrorColor);
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [embed],
         });
       }
@@ -62,7 +61,7 @@ module.exports = {
           })
           .setDescription('The user your trying to tip doesnt have an account')
           .setColor(EmbedData.ErrorColor);
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [AccountEmbed],
           ephemeral: true,
         });
@@ -88,7 +87,7 @@ module.exports = {
           })
           .setDescription('Your trying to tip more than you have!')
           .setColor(EmbedData.ErrorColor);
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [AccountEmbed],
           ephemeral: true,
         });
@@ -103,9 +102,8 @@ module.exports = {
           `${Emojis.Jump_load} Please wait while your tx is processed on the new block ${Emojis.Jump_load}`,
         )
         .setColor(EmbedData.SuccessColor);
-      await interaction.followUp({
+      await interaction.reply({
         embeds: [ProccessingTipEmbed],
-        ephemeral: true,
       });
 
       /* Actual Transfer */
@@ -119,7 +117,7 @@ module.exports = {
               })
               .setDescription(response.message)
               .setColor(EmbedData.ErrorColor);
-            return await interaction.followUp({
+            return await interaction.editReply({
               embeds: [embed],
             });
           }
@@ -134,18 +132,20 @@ module.exports = {
             .setFooter({
               text: `TX Hash: ${response}`,
             });
-          return await interaction.followUp({
+          return await interaction.editReply({
             embeds: [SuccessSend],
           });
         },
       );
+
+      // await ProccessingTipMessage.delete();
     } catch (err: any) {
       console.log(err);
       const embed = new EmbedBuilder()
         .setTitle('Error')
         .setDescription('An error occured when trying to tip, please try again later.')
         .setColor(EmbedData.ErrorColor);
-      return interaction.followUp({
+      return interaction.editReply({
         embeds: [embed],
       });
     }
