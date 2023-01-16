@@ -2,7 +2,7 @@ import { client } from '../index';
 import { ApplicationCommandOptionType, Interaction } from 'discord.js';
 import accounts from '../Models/accounts';
 
-client.on('interactionCreate', async (interaction: Interaction) => {
+client.on('interactionCreate', async (interaction: any) => {
   let data = await accounts.findOne({
     uid: interaction.user.id,
   });

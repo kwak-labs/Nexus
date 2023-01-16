@@ -1,7 +1,7 @@
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import * as dot from 'dotenv';
 
-export const client: any = new Client({
+export const client: Client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,

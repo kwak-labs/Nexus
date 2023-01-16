@@ -1,6 +1,9 @@
+import { ActivityType } from 'discord.js';
 import { client } from '../index';
 
 client.on('ready', async () => {
-  client.user.setActivity('kwak', { type: 'WATCHING' });
+  client.user!.setActivity('blocks be created', {
+    type: ActivityType.Watching,
+  });
   console.log('Yeher bot be online');
 });
