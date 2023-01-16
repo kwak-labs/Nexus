@@ -107,8 +107,6 @@ module.exports = {
       for (let i = 0; i < winners.length; i++) {
         let winnerIndex = winners[i];
 
-        console.log(allNexusUsers);
-
         //@ts-ignore
         let winnerBridge = new Bridge(ChainData[coin], allNexusUsers[winnerIndex - 1].mnemonic);
         await winnerBridge._initialize();
