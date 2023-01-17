@@ -3,6 +3,11 @@ import { ApplicationCommandOptionType, Interaction } from 'discord.js';
 import accounts from '../Models/accounts';
 
 client.on('interactionCreate', async (interaction: any) => {
+  if (!interaction.guild?.id) {
+    return interaction.reply({
+      content: 'DM Interactions have been disabled',
+    });
+  }
   let data = await accounts.findOne({
     uid: interaction.user.id,
   });
@@ -14,8 +19,8 @@ client.on('interactionCreate', async (interaction: any) => {
       data.save();
     }
   }
-  // Slash Command Handling
   if (interaction.isCommand()) {
+    // Slash Command Handling
     // await interaction.deferReply({ ephemeral: false }).catch(() => {});
 
     const cmd: any = client.slashCommands.get(interaction.commandName);

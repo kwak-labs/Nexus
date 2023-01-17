@@ -43,7 +43,7 @@ module.exports = {
             name: `No Account`,
             iconURL: interaction.user.displayAvatarURL(),
           })
-          .setDescription('You dont have an account with Nexus /start') // eric easter egg
+          .setDescription('You dont have an account with Nexus /start')
           .setColor(EmbedData.ErrorColor);
         return await interaction.reply({
           embeds: [embed],
