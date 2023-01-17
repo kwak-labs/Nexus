@@ -29,10 +29,10 @@ module.exports = {
 
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     try {
-      let coin: string = interaction.options.getString('coin')!;
-      let memo = interaction.options.getString('memo')!;
-      let amount = interaction.options.getNumber('amount')!;
-      let user = interaction.options.getUser('user')!;
+      let coin: string = interaction.options.getString('coin')!; // Coin being sent
+      let memo = interaction.options.getString('memo')!; // Transaction Memo
+      let amount = interaction.options.getNumber('amount')!; // Amount being sent
+      let user = interaction.options.getUser('user')!; // User getting the tip
 
       let sendingUser = await accounts.findOne({
         uid: interaction.user.id,
