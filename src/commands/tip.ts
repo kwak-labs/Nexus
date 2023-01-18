@@ -88,6 +88,8 @@ module.exports = {
         });
       }
 
+      let tipAmountUsd = SenderClient.getUsdByAsset(amount);
+
       const ProccessingTipEmbed = new EmbedBuilder()
         .setAuthor({
           name: `Sending ${coin}`,
@@ -121,13 +123,16 @@ module.exports = {
             name: `Sent ${coin}`,
             iconURL: user.displayAvatarURL(),
           })
-          .setDescription(`I have successfully sent ${amount} ${coin} to ${user.username}\n`)
+          .setDescription(
+            `${interaction.user} has successfully tipped ${amount} ${coin} (*${tipAmountUsd}*) to ${user.username}\n`,
+          )
           .setColor(EmbedData.SuccessColor)
           .setFooter({
             text: `TX Hash: ${response}`,
           });
         return await interaction.editReply({
           embeds: [SuccessSend],
+          content: `<@${user.id}>`,
         });
       });
 
