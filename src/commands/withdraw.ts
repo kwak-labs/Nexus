@@ -32,15 +32,17 @@ module.exports = {
 
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     try {
-      await interaction.deferReply();
-      let coin: string = interaction.options.getString('coin')!;
-      let memo = interaction.options.getString('memo')!;
-      let amount = interaction.options.getNumber('amount')!;
-      let address = interaction.options.getString('address')!;
+      let coin: string = interaction.options.getString('coin')!; // Coin being sent
+      let memo = interaction.options.getString('memo')!; // Transaction Memo
+      let amount = interaction.options.getNumber('amount')!; // Amount being sent
+      let address = interaction.options.getString('address')!; // Address recieving
 
+      /* Fetch account data of the user Sending */
       let sendingUser = await accounts.findOne({
         uid: interaction.user.id,
       });
+
+      /* If bro dont have an account, stop */
       if (!sendingUser) {
         const embed = new EmbedBuilder()
           .setAuthor({
@@ -49,19 +51,20 @@ module.exports = {
           })
           .setDescription('You dont have an account with Nexus /start') // eric easter egg
           .setColor(EmbedData.ErrorColor);
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [embed],
         });
       }
 
       //@ts-ignore
-      const SenderClient = new Bridge(ChainData[coin], sendingUser.mnemonic!);
+      const SenderClient = new Bridge(ChainData[coin], sendingUser.mnemonic!); // Bridge of the user sending
       let { coinname } = await SenderClient._initialize();
 
-      let SenderBalance = await SenderClient.getBalance();
+      let SenderBalance = await SenderClient.getBalance(); // Sending users balance
 
-      let AmountBase = SenderClient.assetToBase(amount.toString());
+      let AmountBase = SenderClient.assetToBase(amount.toString()); // Balance in base denom
 
+      /* Tell user no if they are sending more than they have */
       if (parseInt(SenderBalance.base) < AmountBase) {
         const AccountEmbed = new EmbedBuilder()
           .setAuthor({
@@ -70,12 +73,13 @@ module.exports = {
           })
           .setDescription('your trying to withdraw more than you have!')
           .setColor(EmbedData.ErrorColor);
-        return await interaction.followUp({
+        return await interaction.reply({
           embeds: [AccountEmbed],
           ephemeral: true,
         });
       }
 
+      /* Tell user the tip process has started */
       const ProccessingTipEmbed = new EmbedBuilder()
         .setAuthor({
           name: `Sending ${coinname}`,
@@ -85,12 +89,11 @@ module.exports = {
           `${Emojis.Jump_load} Please wait while your tx is processed on the new block ${Emojis.Jump_load}`,
         )
         .setColor(EmbedData.SuccessColor);
-      await interaction.followUp({
+      await interaction.reply({
         embeds: [ProccessingTipEmbed],
-        ephemeral: true,
       });
 
-      /* Actual Transfer */
+      /* Start coin transfer */
       let sendTx = await SenderClient.tip(AmountBase.toString(), address, memo).then(
         async (response) => {
           if (response.error == 'nogas') {
@@ -101,11 +104,12 @@ module.exports = {
               })
               .setDescription(response.message)
               .setColor(EmbedData.ErrorColor);
-            return await interaction.followUp({
+            return await interaction.editReply({
               embeds: [embed],
             });
           }
 
+          // Tip went through
           const SuccessSend = new EmbedBuilder()
             .setAuthor({
               name: `Sent ${coinname}`,
@@ -116,7 +120,7 @@ module.exports = {
             .setFooter({
               text: `TX Hash: ${response}`,
             });
-          return await interaction.followUp({
+          return await interaction.editReply({
             embeds: [SuccessSend],
           });
         },
