@@ -10,7 +10,7 @@ interface IBridge {
   wallet: DirectSecp256k1HdWallet | undefined;
   client: SigningStargateClient | undefined;
 
-  _initialize: () => Promise<{ coinname: string; success: boolean }>;
+  _initialize: () => Promise<this>;
   getAddress: () => Promise<string>;
   baseToAsset: (amount: string) => string;
   assetToBase: (amount: string) => number;
@@ -31,7 +31,7 @@ export class Bridge implements IBridge {
   }
 
   // ! Why cant a constructor be async
-  public async _initialize(): Promise<{ coinname: string; success: boolean }> {
+  public async _initialize(): Promise<this> {
     try {
       this.wallet = await DirectSecp256k1HdWallet.fromMnemonic(this.mnemonic, {
         prefix: this.chain.bench32prefix,
@@ -41,16 +41,10 @@ export class Bridge implements IBridge {
         this.chain.RpcEndpoint,
         this.wallet,
       );
-      return {
-        coinname: this.chain.coinName,
-        success: true,
-      };
+      return this;
     } catch (e) {
       console.log(e);
-      return {
-        coinname: this.chain.coinName,
-        success: false,
-      };
+      return this;
     }
   }
 

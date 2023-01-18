@@ -40,8 +40,7 @@ module.exports = {
       }
 
       // @ts-ignore
-      let bridge = new Bridge(ChainData[coin], data.mnemonic);
-      await bridge._initialize();
+      let bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
 
       let address = await bridge.getAddress();
 

@@ -4,14 +4,13 @@ import EmbedData from '../config/EmbedData.json';
 import accounts from '../Models/accounts';
 
 module.exports = {
-  ...new SlashCommandBuilder()
-    .setName('getseed')
-    .setDescription('Get the seed phrase linked to your account'),
+  ...new SlashCommandBuilder().setName('getseed').setDescription('Get the seed phrase linked to your account'),
   run: async (client: any, interaction: CommandInteraction, args: any) => {
     try {
       let data = await accounts.findOne({
         uid: interaction.user.id,
       });
+
       if (!data) {
         const embed = new EmbedBuilder()
           .setAuthor({

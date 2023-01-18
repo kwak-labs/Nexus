@@ -17,10 +17,7 @@ module.exports = {
         .addChoices(...OptionBuilder),
     )
     .addUserOption((option) =>
-      option
-        .setName('user')
-        .setDescription('Whos balance do you want to check?')
-        .setRequired(false),
+      option.setName('user').setDescription('Whos balance do you want to check?').setRequired(false),
     ),
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     await interaction.deferReply();
@@ -52,8 +49,7 @@ module.exports = {
         }
 
         //@ts-ignore
-        bridge = new Bridge(ChainData[coin], data.mnemonic);
-        await bridge._initialize();
+        bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
 
         address = await bridge.getAddress();
       } else {
@@ -77,8 +73,7 @@ module.exports = {
         }
 
         //@ts-ignore
-        bridge = new Bridge(ChainData[coin], data.mnemonic);
-        await bridge._initialize();
+        bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
 
         address = await bridge.getAddress();
       }

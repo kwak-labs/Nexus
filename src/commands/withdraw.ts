@@ -57,8 +57,7 @@ module.exports = {
       }
 
       //@ts-ignore
-      const SenderClient = new Bridge(ChainData[coin], sendingUser.mnemonic!); // Bridge of the user sending
-      let { coinname } = await SenderClient._initialize();
+      const SenderClient = await new Bridge(ChainData[coin], sendingUser.mnemonic!)._initialize(); // Create the Bridge client
 
       let SenderBalance = await SenderClient.getBalance(); // Sending users balance
 
@@ -82,7 +81,7 @@ module.exports = {
       /* Tell user the tip process has started */
       const ProccessingTipEmbed = new EmbedBuilder()
         .setAuthor({
-          name: `Sending ${coinname}`,
+          name: `Sending ${coin}`,
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setDescription(
@@ -112,10 +111,10 @@ module.exports = {
           // Tip went through
           const SuccessSend = new EmbedBuilder()
             .setAuthor({
-              name: `Sent ${coinname}`,
+              name: `Sent ${coin}`,
               iconURL: interaction.user.displayAvatarURL(),
             })
-            .setDescription(`I have successfully sent ${amount} ${coinname} to \`${address}\`\n`)
+            .setDescription(`I have successfully sent ${amount} ${coin} to \`${address}\`\n`)
             .setColor(EmbedData.SuccessColor)
             .setFooter({
               text: `TX Hash: ${response}`,

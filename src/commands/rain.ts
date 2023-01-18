@@ -22,14 +22,9 @@ module.exports = {
       option.setName('amount').setDescription('Amount of that coin to send?').setRequired(true),
     )
     .addIntegerOption((option) =>
-      option
-        .setName('users')
-        .setDescription('How many users do you want to rain to?')
-        .setRequired(true),
+      option.setName('users').setDescription('How many users do you want to rain to?').setRequired(true),
     )
-    .addStringOption((option) =>
-      option.setName('memo').setDescription('Transaction memo').setRequired(false),
-    ),
+    .addStringOption((option) => option.setName('memo').setDescription('Transaction memo').setRequired(false)),
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     try {
       const coin: string = interaction.options.getString('coin')!;
@@ -56,8 +51,7 @@ module.exports = {
 
       //@ts-ignore
 
-      let bridge = new Bridge(ChainData[coin], data.mnemonic);
-      let { coinname } = await bridge._initialize();
+      let bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
 
       let balance = await bridge.getBalance();
 
@@ -86,9 +80,7 @@ module.exports = {
             name: `Failed Rain`,
             iconURL: interaction.user.displayAvatarURL(),
           })
-          .setDescription(
-            `Your trying to rain more users than have nexus account. Limit is ${allNexusUsers.length}!`,
-          )
+          .setDescription(`Your trying to rain more users than have nexus account. Limit is ${allNexusUsers.length}!`)
           .setColor(EmbedData.ErrorColor)
           .setFooter({ text: EmbedData.Footer });
         return await interaction.reply({
@@ -131,7 +123,7 @@ module.exports = {
 
       const ProccessingRainEmbed = new EmbedBuilder()
         .setAuthor({
-          name: `Raining ${coinname}`,
+          name: `Raining ${coin}`,
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setDescription(
@@ -165,11 +157,11 @@ module.exports = {
             iconURL: interaction.user.displayAvatarURL(),
           })
           .setDescription(
-            `${interaction.user} has just rained **${amount} ${coinname}** (*$${(
+            `${interaction.user} has just rained **${amount} ${coin}** (*$${(
               await bridge.getUsdByAsset(amount)
             ).toFixed(3)}*) on ${users} users
             
-            Each user will recieve **${amountPerUser} ${coinname}** (*$${(
+            Each user will recieve **${amountPerUser} ${coin}** (*$${(
               await bridge.getUsdByAsset(parseInt(amountPerUser))
             ).toFixed(3)}*)
             `,
