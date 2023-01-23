@@ -21,14 +21,9 @@ module.exports = {
       option.setName('amount').setDescription('Amount of that coin to send?').setRequired(true),
     )
     .addStringOption((option) =>
-      option
-        .setName('address')
-        .setDescription('What address do you want to send too?')
-        .setRequired(true),
+      option.setName('address').setDescription('What address do you want to send too?').setRequired(true),
     )
-    .addStringOption((option) =>
-      option.setName('memo').setDescription('Transaction memo').setRequired(false),
-    ),
+    .addStringOption((option) => option.setName('memo').setDescription('Transaction memo').setRequired(false)),
 
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
     try {
@@ -63,6 +58,8 @@ module.exports = {
 
       let AmountBase = SenderClient.assetToBase(amount.toString()); // Balance in base denom
 
+      let tipAmountUsd = await SenderClient.getUsdByAsset(amount);
+
       /* Tell user no if they are sending more than they have */
       if (parseInt(SenderBalance.base) < AmountBase) {
         const AccountEmbed = new EmbedBuilder()
@@ -93,37 +90,37 @@ module.exports = {
       });
 
       /* Start coin transfer */
-      let sendTx = await SenderClient.tip(AmountBase.toString(), address, memo).then(
-        async (response) => {
-          if (response.error == 'nogas') {
-            const embed = new EmbedBuilder()
-              .setAuthor({
-                name: `No Gas`,
-                iconURL: interaction.user.displayAvatarURL(),
-              })
-              .setDescription(response.message)
-              .setColor(EmbedData.ErrorColor);
-            return await interaction.editReply({
-              embeds: [embed],
-            });
-          }
-
-          // Tip went through
-          const SuccessSend = new EmbedBuilder()
+      let sendTx = await SenderClient.tip(AmountBase.toString(), address, memo).then(async (response) => {
+        if (response.error == 'nogas') {
+          const embed = new EmbedBuilder()
             .setAuthor({
-              name: `Sent ${coin}`,
+              name: `No Gas`,
               iconURL: interaction.user.displayAvatarURL(),
             })
-            .setDescription(`I have successfully sent ${amount} ${coin} to \`${address}\`\n`)
-            .setColor(EmbedData.SuccessColor)
-            .setFooter({
-              text: `TX Hash: ${response}`,
-            });
+            .setDescription(response.message)
+            .setColor(EmbedData.ErrorColor);
           return await interaction.editReply({
-            embeds: [SuccessSend],
+            embeds: [embed],
           });
-        },
-      );
+        }
+
+        // Tip went through
+        const SuccessSend = new EmbedBuilder()
+          .setAuthor({
+            name: `Sent ${coin}`,
+            iconURL: interaction.user.displayAvatarURL(),
+          })
+          .setDescription(
+            `I have successfully sent ${amount} ${coin} (*$${tipAmountUsd.toFixed(3)}*) to \`${address}\`\n`,
+          )
+          .setColor(EmbedData.SuccessColor)
+          .setFooter({
+            text: `TX Hash: ${response}`,
+          });
+        return await interaction.editReply({
+          embeds: [SuccessSend],
+        });
+      });
     } catch (err: any) {
       console.log(err);
       const embed = new EmbedBuilder()

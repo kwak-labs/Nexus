@@ -88,7 +88,7 @@ module.exports = {
         });
       }
 
-      let tipAmountUsd = SenderClient.getUsdByAsset(amount);
+      let tipAmountUsd = await SenderClient.getUsdByAsset(amount);
 
       const ProccessingTipEmbed = new EmbedBuilder()
         .setAuthor({
@@ -124,7 +124,9 @@ module.exports = {
             iconURL: user.displayAvatarURL(),
           })
           .setDescription(
-            `${interaction.user} has successfully tipped ${amount} ${coin} (*${tipAmountUsd}*) to ${user.username}\n`,
+            `${interaction.user} has successfully tipped ${amount} ${coin} (*$${tipAmountUsd.toFixed(
+              3,
+            )}*) to ${user}\n`,
           )
           .setColor(EmbedData.SuccessColor)
           .setFooter({
