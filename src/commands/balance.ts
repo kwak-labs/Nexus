@@ -15,68 +15,37 @@ module.exports = {
         .setDescription('What balance do you want to get?')
         .setRequired(true)
         .addChoices(...OptionBuilder),
-    )
-    .addUserOption((option) =>
-      option.setName('user').setDescription('Whos balance do you want to check?').setRequired(false),
     ),
   run: async (client: any, interaction: ChatInputCommandInteraction, args: any) => {
-    await interaction.deferReply();
+    await interaction.deferReply({
+      ephemeral: true,
+    });
     try {
       const coin: string = interaction.options.getString('coin')!;
-      let user = interaction.options.getUser('user');
 
-      let address;
-      let bridge;
-      let account;
-      if (user) {
-        let data = await accounts.findOne({
-          uid: user.id,
+      let data = await accounts.findOne({
+        uid: interaction.user.id,
+      });
+
+      let account = interaction.user;
+
+      if (!data) {
+        const embed = new EmbedBuilder()
+          .setAuthor({
+            name: `No Account`,
+            iconURL: interaction.user.displayAvatarURL(),
+          })
+          .setDescription('you dont have a account you silly goos') // eric easter egg
+          .setColor(EmbedData.ErrorColor);
+        return await interaction.editReply({
+          embeds: [embed],
         });
-
-        account = user;
-
-        if (!data) {
-          const embed = new EmbedBuilder()
-            .setAuthor({
-              name: `No Account`,
-              iconURL: interaction.user.displayAvatarURL(),
-            })
-            .setDescription('The user you tried searching does not have an account')
-            .setColor(EmbedData.ErrorColor);
-          return await interaction.editReply({
-            embeds: [embed],
-          });
-        }
-
-        //@ts-ignore
-        bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
-
-        address = await bridge.getAddress();
-      } else {
-        let data = await accounts.findOne({
-          uid: interaction.user.id,
-        });
-
-        account = interaction.user;
-
-        if (!data) {
-          const embed = new EmbedBuilder()
-            .setAuthor({
-              name: `No Account`,
-              iconURL: interaction.user.displayAvatarURL(),
-            })
-            .setDescription('you dont have a account you silly goos') // eric easter egg
-            .setColor(EmbedData.ErrorColor);
-          return await interaction.editReply({
-            embeds: [embed],
-          });
-        }
-
-        //@ts-ignore
-        bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
-
-        address = await bridge.getAddress();
       }
+
+      //@ts-ignore
+      let bridge = await new Bridge(ChainData[coin], data.mnemonic)._initialize();
+
+      let address = await bridge.getAddress();
 
       let balance = await bridge.getBalance(address);
       let price = await bridge.getUsdByAsset(parseFloat(balance.asset));

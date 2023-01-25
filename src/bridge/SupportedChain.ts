@@ -74,7 +74,7 @@ export const ChainData = {
     coinName: 'SCRT',
     gasParam: {
       gas: '180000',
-      amount: 2500,
+      amount: 4500,
     },
   },
   Stargaze: {

@@ -87,6 +87,7 @@ module.exports = {
         .setColor(EmbedData.SuccessColor);
       await interaction.reply({
         embeds: [ProccessingTipEmbed],
+        ephemeral: true,
       });
 
       /* Start coin transfer */
