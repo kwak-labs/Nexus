@@ -103,6 +103,19 @@ export const ChainData = {
       amount: 50000,
     },
   },
+  Umee: {
+    RpcEndpoint: 'http://rpc-umee-0.node75.org:26657',
+    LcdEndpoint: 'https://api.mainnet.network.umee.cc',
+    decimalPrecision: 1000000,
+    coingeckoId: 'umee',
+    bench32prefix: 'umee',
+    denom: 'uumee',
+    coinName: 'UMEE',
+    gasParam: {
+      gas: '180000',
+      amount: 0,
+    },
+  },
 };
 
 export const OptionBuilder = [
@@ -113,6 +126,10 @@ export const OptionBuilder = [
   {
     name: 'Stars',
     value: 'Stargaze',
+  },
+  {
+    name: 'UMEE',
+    value: 'Umee',
   },
   {
     name: 'Gravitation',

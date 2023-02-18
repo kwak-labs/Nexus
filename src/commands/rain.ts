@@ -89,6 +89,8 @@ module.exports = {
         });
       }
 
+      await interaction.deferReply();
+
       let amountPerUser = (amount / users).toFixed(6).toString();
 
       let winners = rainWinners(users, allNexusUsers.length);
@@ -131,7 +133,7 @@ module.exports = {
         )
         .setColor(EmbedData.SuccessColor)
         .setFooter({ text: EmbedData.Footer });
-      await interaction.reply({
+      await interaction.editReply({
         embeds: [ProccessingRainEmbed],
       });
 
@@ -145,7 +147,7 @@ module.exports = {
             .setDescription(response.message)
             .setColor(EmbedData.ErrorColor)
             .setFooter({ text: EmbedData.Footer });
-          return await interaction.followUp({
+          return await interaction.editReply({
             embeds: [embed],
           });
         }
@@ -179,7 +181,7 @@ module.exports = {
       console.log(err);
       const embed = new EmbedBuilder()
         .setTitle('Error')
-        .setDescription('An error occured when fetching your balance please try again')
+        .setDescription('An error occured when trying to rain please try again')
         .setColor(EmbedData.ErrorColor);
       return interaction.editReply({
         embeds: [embed],
