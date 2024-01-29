@@ -1,5 +1,5 @@
 const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
-const EmbedData = require("../config/EmbedData.json");
+const EmbedData = require("../config/embedData.json");
 const Big = require("big.js");
 
 const { ChainData, Bridge, OptionBuilder } = require("../bridge");
