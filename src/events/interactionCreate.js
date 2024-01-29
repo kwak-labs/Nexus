@@ -27,7 +27,10 @@ client.on("interactionCreate", async (interaction) => {
       });
     }
 
-    if (!userData.guilds.includes(interaction.guild.id)) {
+    if (
+      interaction.guild?.id &&
+      !userData.guilds.includes(interaction.guild.id)
+    ) {
       await addGuild(interaction.user.id, interaction.guild.id);
     }
 
