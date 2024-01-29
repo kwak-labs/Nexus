@@ -3,7 +3,7 @@ const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
 
 const { createUser } = require("../helpers/createUser");
 const { addGuild } = require("../helpers/addGuild");
-const EmbedData = require("../config/EmbedData.json");
+const EmbedData = require("../config/embedData.json");
 
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isCommand()) {
