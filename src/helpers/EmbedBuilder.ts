@@ -1,5 +1,0 @@
-/*
-
-Will make a custom Embed building object soon
-
-*/
