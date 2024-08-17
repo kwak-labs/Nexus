@@ -14,7 +14,7 @@ module.exports = {
      * @type {import('discord.js').ChatInputCommandInteraction}
      */ interaction,
     args,
-    userData
+    userData,
   ) => {
     try {
       const CommandAck = new EmbedBuilder()
@@ -35,7 +35,7 @@ module.exports = {
           name: `Seed Phrase`,
           iconURL: interaction.user.displayAvatarURL(),
         })
-        .setDescription(`||\`\`\`${userData.mnemonic}}\`\`\`||`)
+        .setDescription(`||\`\`\`${userData.mnemonic}\`\`\`||`)
         .setColor(EmbedData.SuccessColor)
         .setFooter({ text: EmbedData.Footer });
       await interaction.user.send({
