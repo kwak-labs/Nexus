@@ -90,7 +90,7 @@ const ChainData = {
       amount: 8500,
     },
   },
-  USDCElys: {
+  "Elys USDC": {
     RpcEndpoint: "https://rpc.testnet.elys.network/",
     LcdEndpoint: "https://api.testnet.elys.network/",
     decimalPrecision: 1000000,
@@ -137,7 +137,7 @@ const OptionBuilder = [
   },
   {
     name: "Elys USDC",
-    value: "USDCElys",
+    value: "Elys USDC",
   },
 ];
 
