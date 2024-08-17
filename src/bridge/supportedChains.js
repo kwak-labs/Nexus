@@ -90,6 +90,20 @@ const ChainData = {
       amount: 8500,
     },
   },
+  USDCElys: {
+    RpcEndpoint: "https://rpc.testnet.elys.network/",
+    LcdEndpoint: "https://api.testnet.elys.network/",
+    decimalPrecision: 1000000,
+    coingeckoId: "none",
+    bench32prefix: "elys",
+    denom:
+      "ibc/2180E84E20F5679FCC760D8C165B60F42065DEF7F46A72B447CFF1B7DC6C0A65",
+    coinName: "elys_USDC",
+    gasParam: {
+      gas: "180000",
+      amount: 8500,
+    },
+  },
 };
 
 const OptionBuilder = [
@@ -120,6 +134,10 @@ const OptionBuilder = [
   {
     name: "Elys",
     value: "Elys",
+  },
+  {
+    name: "Elys USDC",
+    value: "USDCElys",
   },
 ];
 
