@@ -77,6 +77,19 @@ const ChainData = {
       amount: 50000,
     },
   },
+  Elys: {
+    RpcEndpoint: "https://rpc.testnet.elys.network/",
+    LcdEndpoint: "https://api.testnet.elys.network/",
+    decimalPrecision: 1000000,
+    coingeckoId: "none",
+    bench32prefix: "elys",
+    denom: "uelys",
+    coinName: "tELYS",
+    gasParam: {
+      gas: "180000",
+      amount: 8500,
+    },
+  },
 };
 
 const OptionBuilder = [
@@ -103,6 +116,10 @@ const OptionBuilder = [
   {
     name: "Juno",
     value: "Juno",
+  },
+  {
+    name: "Elys",
+    value: "Elys",
   },
 ];
 

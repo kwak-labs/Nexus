@@ -56,7 +56,7 @@ class Bridge {
 
       this.client = await SigningStargateClient.connectWithSigner(
         this.chain.RpcEndpoint,
-        this.wallet
+        this.wallet,
       );
       return this;
     } catch (e) {
@@ -130,6 +130,9 @@ class Bridge {
    * @returns {Promise<number>} The USD value.
    */
   async getUsdByAsset(amount) {
+    if (this.chain.coingeckoId == "none") {
+      return 0;
+    }
     const CoinGeckoClient = new Coingecko();
     let data = await CoinGeckoClient.simple.price({
       ids: [this.chain.coingeckoId],
@@ -165,7 +168,7 @@ class Bridge {
         error: "nogas",
         gas: this.chain.gasParam.amount,
         message: `You are unable to pay the ${this.baseToAsset(
-          this.chain.gasParam.amount.toString()
+          this.chain.gasParam.amount.toString(),
         )} ${this.chain.coinName} gas fee`,
       };
     }
@@ -189,7 +192,7 @@ class Bridge {
             },
           ],
         },
-        memo
+        memo,
       );
 
       return res.transactionHash;

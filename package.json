@@ -13,6 +13,7 @@
 		"coingecko-api": "^1.0.10",
 		"discord.js": "^14.14.1",
 		"dotenv": "^16.3.1",
-		"lmdb": "^2.9.2"
+		"lmdb": "^2.9.2",
+		"slash-commands": "^1.5.0"
 	}
 }
