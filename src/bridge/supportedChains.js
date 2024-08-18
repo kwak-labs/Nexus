@@ -77,6 +77,7 @@ const ChainData = {
       amount: 50000,
     },
   },
+  // Testnet
   Elys: {
     RpcEndpoint: "https://rpc.testnet.elys.network/",
     LcdEndpoint: "https://api.testnet.elys.network/",
@@ -90,6 +91,8 @@ const ChainData = {
       amount: 8500,
     },
   },
+
+  // Testnet USDC for Elys
   "Elys USDC": {
     RpcEndpoint: "https://rpc.testnet.elys.network/",
     LcdEndpoint: "https://api.testnet.elys.network/",

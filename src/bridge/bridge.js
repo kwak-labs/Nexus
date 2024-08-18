@@ -130,9 +130,11 @@ class Bridge {
    * @returns {Promise<number>} The USD value.
    */
   async getUsdByAsset(amount) {
+    // If the coin doesnt have a coingecko id, return 0
     if (this.chain.coingeckoId == "none") {
       return 0;
     }
+
     const CoinGeckoClient = new Coingecko();
     let data = await CoinGeckoClient.simple.price({
       ids: [this.chain.coingeckoId],

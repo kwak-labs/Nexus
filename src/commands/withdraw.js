@@ -16,25 +16,25 @@ module.exports = {
         .setName("coin")
         .setDescription("What coin will you be withdrawing?")
         .setRequired(true)
-        .addChoices(...OptionBuilder)
+        .addChoices(...OptionBuilder),
     )
     .addNumberOption((option) =>
       option
         .setName("amount")
         .setDescription("Amount of that coin to send?")
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName("address")
         .setDescription("What address do you want to send too?")
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName("memo")
         .setDescription("Transaction memo")
-        .setRequired(false)
+        .setRequired(false),
     ),
   run: async (
     client,
@@ -42,93 +42,31 @@ module.exports = {
      * @type {import('discord.js').ChatInputCommandInteraction}
      */ interaction,
     args,
-    sendingUserData
+    sendingUserData,
   ) => {
     await interaction.deferReply({ ephemeral: true });
     try {
-      let coin = interaction.options.getString("coin");
-      let memo = interaction.options.getString("memo");
-      let amount = interaction.options.getNumber("amount");
-      let address = interaction.options.getString("address"); // Address recieving
-
-      const bridge = await new Bridge(
-        ChainData[coin],
-        sendingUserData.mnemonic
-      )._initialize();
-      let balance = await bridge.getBalance();
-
-      const amountToSend = bridge.assetToBase(amount.toString());
-      if (Big(balance.base).lt(amountToSend)) {
-        const failedEmbed = new EmbedBuilder()
-          .setAuthor({
-            name: `Failed withdraw`,
-            iconURL: interaction.user.displayAvatarURL(),
-          })
-          .setDescription("You're trying to withdraw more than you have!")
-          .setColor(EmbedData.ErrorColor);
-        return await interaction.followUp({
-          embeds: [failedEmbed],
-        });
-      }
-
-      const tipAmountUsd = await bridge.getUsdByAsset(amount);
-
-      const processingTipEmbed = new EmbedBuilder()
+      const movedEmbed = new EmbedBuilder()
         .setAuthor({
-          name: `Sending ${coin}`,
+          name: `Command Moved`,
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setDescription(
-          `${Emojis.Jump_load} Please wait while your TX is processed on the new block ${Emojis.Jump_load}`
+          `${Emojis.Warning} This command has been moved to the /transfer syntax. Please use that instead. ${Emojis.Warning}`,
         )
         .setFooter({ text: EmbedData.Footer })
-        .setColor(EmbedData.SuccessColor);
-      await interaction.editReply({
-        embeds: [processingTipEmbed],
-      });
-
-      await bridge
-        .tip(amountToSend.toString(), address, memo)
-        .then(async (response) => {
-          if (response.error) {
-            const errorEmbed = new EmbedBuilder()
-              .setAuthor({
-                name: `Transaction Failed`,
-                iconURL: interaction.user.displayAvatarURL(),
-              })
-              .setDescription(
-                `Transaction failed with: \`\`\`${response.message}\`\`\``
-              )
-              .setColor(EmbedData.ErrorColor);
-            return await interaction.editReply({
-              embeds: [errorEmbed],
-            });
-          }
-
-          const successEmbed = new EmbedBuilder()
-            .setAuthor({
-              name: `Withdrew ${coin}`,
-              iconURL: interaction.user.displayAvatarURL(),
-            })
-            .setDescription(
-              `${amount} ${coin} (*$${tipAmountUsd.toFixed(
-                3
-              )}*) has been sent to \`\`\`${address}\`\`\`\n`
-            )
-            .setFooter({ text: EmbedData.Footer })
-            .setColor(EmbedData.SuccessColor)
-            .setFooter({
-              text: `TX Hash: ${response}`,
-            });
-          return await interaction.editReply({
-            embeds: [successEmbed],
-          });
+        .setColor(EmbedData.ErrorColor)
+        .setFooter({
+          text: "This command will be removed in the future.",
         });
+      return await interaction.editReply({
+        embeds: [movedEmbed],
+      });
     } catch (err) {
       console.log(err);
       const embed = new EmbedBuilder()
         .setTitle("Error")
-        .setDescription("An error occured when trying to tip")
+        .setDescription("An error occured when trying to transfer")
         .setFooter({ text: EmbedData.Footer })
         .setColor(EmbedData.ErrorColor);
       return interaction.followUp({

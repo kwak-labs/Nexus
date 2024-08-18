@@ -2,18 +2,19 @@ const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
 const EmbedData = require("../config/embedData.json");
 const Big = require("big.js");
 
+/* Awesome bridge functions */
 const { ChainData, Bridge, OptionBuilder } = require("../bridge");
 const Emojis = require("../config/emojis.json");
 const { getUser } = require("../helpers/getUser");
 
 module.exports = {
   ...new SlashCommandBuilder()
-    .setName("tip")
-    .setDescription("Tip someone some of your tokens")
+    .setName("transfer")
+    .setDescription("Send some coins to another wallet")
     .addStringOption((option) =>
       option
         .setName("coin")
-        .setDescription("What coin will you be sending?")
+        .setDescription("What coin will you be transferring?")
         .setRequired(true)
         .addChoices(...OptionBuilder),
     )
@@ -23,10 +24,10 @@ module.exports = {
         .setDescription("Amount of that coin to send?")
         .setRequired(true),
     )
-    .addUserOption((option) =>
+    .addStringOption((option) =>
       option
-        .setName("user")
-        .setDescription("Who do you want to tip?")
+        .setName("address")
+        .setDescription("What address do you want to send too?")
         .setRequired(true),
     )
     .addStringOption((option) =>
@@ -35,44 +36,42 @@ module.exports = {
         .setDescription("Transaction memo")
         .setRequired(false),
     ),
-  run: async (client, interaction, args, senderData) => {
+  run: async (
+    client,
+    /**
+     * @type {import('discord.js').ChatInputCommandInteraction}
+     */ interaction,
+    args,
+    sendingUserData,
+  ) => {
     await interaction.deferReply({ ephemeral: true });
     try {
-      const coin = interaction.options.getString("coin");
-      const memo = interaction.options.getString("memo");
-      const amount = interaction.options.getNumber("amount");
-      const recipient = interaction.options.getUser("user");
+      let coin = interaction.options.getString("coin");
+      let memo = interaction.options.getString("memo");
+      let amount = interaction.options.getNumber("amount");
+      let address = interaction.options.getString("address"); // Address recieving
 
-      const recipientData = await getUser(recipient.id, interaction.guildId);
-
-      const senderClient = await new Bridge(
+      const bridge = await new Bridge(
         ChainData[coin],
-        senderData.mnemonic,
+        sendingUserData.mnemonic,
       )._initialize();
-      const senderBalance = await senderClient.getBalance();
+      let balance = await bridge.getBalance();
 
-      const recipientClient = await new Bridge(
-        ChainData[coin],
-        recipientData.mnemonic,
-      )._initialize();
-      const recipientAddress = await recipientClient.getAddress();
-
-      const amountToSend = senderClient.assetToBase(amount.toString());
-      if (Big(senderBalance.base).lt(amountToSend)) {
+      const amountToSend = bridge.assetToBase(amount.toString());
+      if (Big(balance.base).lt(amountToSend)) {
         const failedEmbed = new EmbedBuilder()
           .setAuthor({
-            name: `Failed tip`,
+            name: `Failed withdraw`,
             iconURL: interaction.user.displayAvatarURL(),
           })
-          .setDescription("You're trying to tip more than you have!")
-          .setFooter({ text: EmbedData.Footer })
+          .setDescription("You're trying to withdraw more than you have!")
           .setColor(EmbedData.ErrorColor);
         return await interaction.followUp({
           embeds: [failedEmbed],
         });
       }
 
-      const tipAmountUsd = await senderClient.getUsdByAsset(amount);
+      const tipAmountUsd = await bridge.getUsdByAsset(amount);
 
       const processingTipEmbed = new EmbedBuilder()
         .setAuthor({
@@ -88,8 +87,8 @@ module.exports = {
         embeds: [processingTipEmbed],
       });
 
-      await senderClient
-        .tip(amountToSend.toString(), recipientAddress, memo)
+      await bridge
+        .tip(amountToSend.toString(), address, memo)
         .then(async (response) => {
           if (response.error) {
             const errorEmbed = new EmbedBuilder()
@@ -108,34 +107,32 @@ module.exports = {
 
           const successEmbed = new EmbedBuilder()
             .setAuthor({
-              name: `Sent ${coin}`,
-              iconURL: recipient.displayAvatarURL(),
+              name: `Withdrew ${coin}`,
+              iconURL: interaction.user.displayAvatarURL(),
             })
             .setDescription(
-              `${
-                interaction.user
-              } has successfully tipped ${amount} ${coin} (*$${tipAmountUsd.toFixed(
+              `${amount} ${coin} (*$${tipAmountUsd.toFixed(
                 3,
-              )}*) to ${recipient}\n`,
+              )}*) has been sent to \`\`\`${address}\`\`\`\n`,
             )
+            .setFooter({ text: EmbedData.Footer })
             .setColor(EmbedData.SuccessColor)
             .setFooter({
               text: `TX Hash: ${response}`,
             });
-          return await interaction.channel.send({
+          return await interaction.editReply({
             embeds: [successEmbed],
-            content: `<@${recipient.id}>`,
           });
         });
     } catch (err) {
       console.log(err);
-      const errorEmbed = new EmbedBuilder()
+      const embed = new EmbedBuilder()
         .setTitle("Error")
-        .setDescription("An error occurred when trying to tip")
+        .setDescription("An error occured when trying to tip")
         .setFooter({ text: EmbedData.Footer })
         .setColor(EmbedData.ErrorColor);
       return interaction.followUp({
-        embeds: [errorEmbed],
+        embeds: [embed],
         ephemeral: true,
       });
     }
