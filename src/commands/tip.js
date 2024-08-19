@@ -106,6 +106,20 @@ module.exports = {
             });
           }
 
+          const updateEphemeralEmbed = new EmbedBuilder()
+            .setAuthor({
+              name: `Sent ${coin}`,
+              iconURL: interaction.user.displayAvatarURL(),
+            })
+            .setDescription(
+              `The tip has been sent to ${recipient} ${Emojis.Online}`,
+            )
+            .setFooter({ text: EmbedData.Footer })
+            .setColor(EmbedData.SuccessColor);
+          await interaction.editReply({
+            embeds: [updateEphemeralEmbed],
+          });
+
           const successEmbed = new EmbedBuilder()
             .setAuthor({
               name: `Sent ${coin}`,
