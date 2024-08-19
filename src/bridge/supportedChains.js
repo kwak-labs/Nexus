@@ -48,7 +48,7 @@ const ChainData = {
     coinName: "Stars",
     gasParam: {
       gas: "180000",
-      amount: 100000,
+      amount: 180000,
     },
   },
   // Testnet
