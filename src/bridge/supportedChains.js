@@ -12,6 +12,32 @@ const ChainData = {
       amount: 900,
     },
   },
+  Juno: {
+    RpcEndpoint: "https://rpc-juno-ia.cosmosia.notional.ventures/",
+    LcdEndpoint: "https://api-juno-ia.cosmosia.notional.ventures/",
+    decimalPrecision: 1000000,
+    coingeckoId: "juno-network",
+    bench32prefix: "juno",
+    denom: "ujuno",
+    coinName: "Juno",
+    gasParam: {
+      gas: "180000",
+      amount: 350,
+    },
+  },
+  Kava: {
+    RpcEndpoint: "https://rpc-kava-ia.cosmosia.notional.ventures/",
+    LcdEndpoint: "https://api-kava-ia.cosmosia.notional.ventures/",
+    decimalPrecision: 1000000,
+    coingeckoId: "kava",
+    bench32prefix: "kava",
+    denom: "ukava",
+    coinName: "Kava",
+    gasParam: {
+      gas: "180000",
+      amount: 8500,
+    },
+  },
   Stargaze: {
     RpcEndpoint: "https://stargaze-rpc.polkachu.com",
     LcdEndpoint: "https://api-stargaze-ia.cosmosia.notional.ventures/",
@@ -65,6 +91,22 @@ const OptionBuilder = [
   {
     name: "Stars",
     value: "Stargaze",
+  },
+  {
+    name: "Scrt",
+    value: "Secret",
+  },
+  {
+    name: "VDL",
+    value: "Vidulum",
+  },
+  {
+    name: "Kava",
+    value: "Kava",
+  },
+  {
+    name: "Juno",
+    value: "Juno",
   },
   {
     name: "Elys",
