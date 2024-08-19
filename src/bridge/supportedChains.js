@@ -1,5 +1,5 @@
 const ChainData = {
-  Cosmos: {
+  Atom: {
     RpcEndpoint: "https://cosmos-rpc.polkachu.com",
     LcdEndpoint: "https://cosmos-lcd.polkachu.com",
     decimalPrecision: 1000000,
@@ -38,7 +38,7 @@ const ChainData = {
       amount: 8500,
     },
   },
-  Stargaze: {
+  Stars: {
     RpcEndpoint: "https://stargaze-rpc.polkachu.com",
     LcdEndpoint: "https://api-stargaze-ia.cosmosia.notional.ventures/",
     decimalPrecision: 1000000,
@@ -86,19 +86,15 @@ const ChainData = {
 const OptionBuilder = [
   {
     name: "Atom",
-    value: "Cosmos",
+    value: "Atom",
   },
   {
     name: "Stars",
-    value: "Stargaze",
+    value: "Stars",
   },
   {
     name: "Scrt",
     value: "Secret",
-  },
-  {
-    name: "VDL",
-    value: "Vidulum",
   },
   {
     name: "Kava",
