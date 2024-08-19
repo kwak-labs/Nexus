@@ -61,10 +61,10 @@ module.exports = {
       if (Big(balance.base).lt(amountToSend)) {
         const failedEmbed = new EmbedBuilder()
           .setAuthor({
-            name: `Failed withdraw`,
+            name: `Failed transfer`,
             iconURL: interaction.user.displayAvatarURL(),
           })
-          .setDescription("You're trying to withdraw more than you have!")
+          .setDescription("You're trying to transfer more than you have!")
           .setColor(EmbedData.ErrorColor);
         return await interaction.followUp({
           embeds: [failedEmbed],
@@ -107,7 +107,7 @@ module.exports = {
 
           const successEmbed = new EmbedBuilder()
             .setAuthor({
-              name: `Withdrew ${coin}`,
+              name: `Transferred ${coin}`,
               iconURL: interaction.user.displayAvatarURL(),
             })
             .setDescription(
